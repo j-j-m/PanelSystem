@@ -10,6 +10,7 @@ import AppKit
 
 @objc protocol DockingInitiator: class {
     @objc func undockPanel()
+    @objc func undockPanelTabbed()
     @objc func closePanel()
     @objc func dockingMenu() -> NSMenu
 }

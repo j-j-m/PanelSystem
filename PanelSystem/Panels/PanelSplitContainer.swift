@@ -102,6 +102,16 @@ extension PanelSplitContainerController: PanelToolbarControllerDelegate {
         
     }
     
+    func undockTabbed(_ panel: NSViewController) {
+        
+        let frame = panel.view.screenFrame ?? defaultFrame
+        let window = panel.view.window
+        pop(panel)
+        
+        let _ = panelController(with: [panel], at: frame, parent: window)
+        
+    }
+    
     func remove(_ panel: NSViewController) {
         pop(panel)
     }

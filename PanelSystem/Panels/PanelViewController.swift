@@ -95,7 +95,7 @@ public class PanelViewController: NSViewController {
         view.addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat: "V:|[t(==size)][c]|",
                                            options: [],
-                                           metrics: ["size": 15],
+                                           metrics: ["size": 17],
                                            views: ["t": tView, "c": cView]))
         view.addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat:  "H:|[t(==c)]|",

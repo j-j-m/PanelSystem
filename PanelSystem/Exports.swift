@@ -49,7 +49,7 @@ public var panelWindowController: NSWindowController? = {
     return controller
 }()
 
-public func panelController(with controllers: [NSViewController], at frame: NSRect? = nil) -> NSWindowController {
+public func panelController(with controllers: [NSViewController], at frame: NSRect? = nil, parent: NSWindow? = nil) -> NSWindowController {
     let window = basicWindow(with: frame)
     let controller = PanelController()
     
@@ -57,9 +57,13 @@ public func panelController(with controllers: [NSViewController], at frame: NSRe
     
     controller.window = window
     controller.loadWindow()
-    
-    window.makeKeyAndOrderFront(nil)
-    
+    window.title = "Window"
+    if let p = parent {
+        p.addTabbedWindow(window, ordered: .above)
+    }
+    else {
+        window.makeKeyAndOrderFront(nil)
+    }
     return controller
 }
 

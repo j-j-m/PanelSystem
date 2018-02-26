@@ -35,6 +35,7 @@ struct PanelToolbarElements {
 /// PanelToolbarControllerDelegate
 protocol PanelToolbarControllerDelegate: class {
     func undock(_ panel: NSViewController)
+    func undockTabbed(_ panel: NSViewController)
     func remove(_ panel: NSViewController)
 }
 
@@ -115,10 +116,13 @@ extension PanelToolbarController: DockingInitiator {
         let menu = NSMenu()
         let undockPanelMenuItem = NSMenuItem(title: "Undock", action: #selector(self.undockPanel), keyEquivalent: "")
         undockPanelMenuItem.target = self
+        let undockPanelTabbedMenuItem = NSMenuItem(title: "Undock to New Tab", action: #selector(self.undockPanelTabbed), keyEquivalent: "")
+        undockPanelTabbedMenuItem.target = self
         let closePanelMenuItem = NSMenuItem(title: "Close", action: #selector(self.closePanel), keyEquivalent: "")
         closePanelMenuItem.target = self
         
         menu.addItem(undockPanelMenuItem)
+        menu.addItem(undockPanelTabbedMenuItem)
         menu.addItem(NSMenuItem.separator())
         menu.addItem(closePanelMenuItem)
 //        menu.autoenablesItems = false
@@ -131,6 +135,13 @@ extension PanelToolbarController: DockingInitiator {
             d.undock(p)
         }
     }
+    
+    @objc func undockPanelTabbed() {
+        if let d = delegate, let p = parentController {
+            d.undockTabbed(p)
+        }
+    }
+    
     @objc func closePanel() {
         if let d = delegate, let p = parentController {
             d.remove(p)
