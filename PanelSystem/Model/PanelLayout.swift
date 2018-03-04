@@ -38,7 +38,13 @@ extension Panel {
         switch self {
         case .layouts(let panels, let orientation):
             let container = PanelSplitContainerController()
-            container.setup(with: panels.map { $0.controller() }, orientation: orientation)
+            container.setup(with: panels.map { p in
+                   let c = p.controller()
+                if let view = c as? PanelViewController {
+                    view.parentContainer = container
+                }
+                return c
+            }, orientation: orientation)
             return container
         case .view(let view):
             return PanelViewController()

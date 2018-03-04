@@ -23,7 +23,6 @@ struct PanelToolbarElements {
     static var dockingButton: DockingOperationGlyph {
         let b = DockingOperationGlyph()
         b.wantsLayer = true
-
         b.layer?.contents = NSImage.named("docking_icon")
         return b
     }
@@ -46,7 +45,11 @@ class PanelToolbarController: NSViewController {
     
     var dockingButton: DockingOperationGlyph!
     
-    weak var parentController: PanelViewController?
+    weak var parentController: PanelViewController? {
+        didSet {
+             self.dockingButton.parent = parentController
+        }
+    }
     weak var delegate: PanelToolbarControllerDelegate? {
         didSet {
             print("set delegate")
@@ -58,8 +61,6 @@ class PanelToolbarController: NSViewController {
         self.backgroundColor = backgroundColor
       
         dockingButton = PanelToolbarElements.dockingButton
-        
-//        dockingButton.frame = NSRect(x: 0, y: 0, width: 12, height: 12)
         
         super.init(nibName: nil, bundle: nil)
         

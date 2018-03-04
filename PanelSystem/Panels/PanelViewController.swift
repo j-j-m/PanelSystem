@@ -22,7 +22,12 @@ struct BorderViews {
 
 public class PanelViewController: NSViewController {
     
-    weak var parentContainer: PanelSplitContainerController?
+    weak var parentContainer: PanelSplitContainerController? {
+        didSet {
+            
+
+        }
+    }
     var toolbarController = PanelToolbarController(backgroundColor: .darkGray)
     var containerController = ViewController(backgroundColor: .darkGray)
     
@@ -47,7 +52,8 @@ public class PanelViewController: NSViewController {
     
     override public func loadView() {
         let dragHandler = DragHandler()
-        
+        dragHandler.parent = self
+        dragHandler.container = parentContainer
         dragHandler.updateDragAction = { point in
             
             self.updateInteractionState(for: point)
@@ -140,6 +146,103 @@ public class PanelViewController: NSViewController {
         }
         
     }
+    
+    public func dockRelative(to panel: PanelViewController, at abutment: PanelAbutment) {
+        
+        switch abutment {
+        case .top(let topo):
+            dockTop(with: topo, inPanel: panel)
+        case .right(let topo):
+            dockRight(with: topo, inPanel: panel)
+        case .bottom(let topo):
+            dockBottom(with: topo, inPanel: panel)
+        case .left(let topo):
+            dockLeft(with: topo, inPanel: panel)
+        case .none:
+            break
+        }
+        
+    }
+    
+    func dockTop(with topo: AbutmentTopology, inPanel panel: PanelViewController) {
+        if let c = panel.parentContainer, let p = parent {
+            let o = c.orientation
+            switch o {
+            case .horizontal:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+                    if let n = self.parentContainer?.pop(self) {
+                        c.insert(n, at: index)
+                    }
+                }
+            case .vertical:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+//                    if let n = self.parentContainer?.pop(self) {
+//                        c.insert(n, at: index)
+//                    }
+                }
+            }
+        }
+    }
+    
+    func dockRight(with topo: AbutmentTopology, inPanel panel: PanelViewController) {
+        if let c = panel.parentContainer, let p = parent {
+            let o = c.orientation
+            switch o {
+            case .horizontal:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+//                    if let n = self.parentContainer?.pop(self) {
+//                        c.insert(n, at: index+1)
+//                    }
+                }
+            case .vertical:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+                    if let n = self.parentContainer?.pop(self) {
+                        c.insert(n, at: index+1)
+                    }
+                }
+            }
+        }
+    }
+    
+    func dockBottom(with topo: AbutmentTopology, inPanel panel: PanelViewController) {
+        if let c = panel.parentContainer, let p = parent {
+            let o = c.orientation
+            switch o {
+            case .horizontal:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+                    if let n = self.parentContainer?.pop(self) {
+                        c.insert(n, at: index)
+                    }
+                }
+            case .vertical:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+//                    if let n = self.parentContainer?.pop(self) {
+//                        c.insert(n, at: index)
+//                    }
+                }
+            }
+        }
+    }
+    
+    func dockLeft(with topo: AbutmentTopology, inPanel panel: PanelViewController) {
+        if let c = panel.parentContainer, let p = parent {
+            let o = c.orientation
+            switch o {
+            case .horizontal:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+//                    if let n = self.parentContainer?.pop(self) {
+//                        c.insert(n, at: index)
+//                    }
+                }
+            case .vertical:
+                if let index = c.splitViewItems.index(where: { $0.viewController == panel }) {
+                    if let n = self.parentContainer?.pop(self) {
+                        c.insert(n, at: index)
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Extensions
@@ -164,7 +267,7 @@ class ViewController: NSViewController {
     private let backgroundColor: NSColor
     
     init(backgroundColor: NSColor) {
-        self.backgroundColor = .random()
+        self.backgroundColor = backgroundColor
         super.init(nibName: nil, bundle: nil)
         
     }

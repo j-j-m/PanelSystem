@@ -9,6 +9,7 @@
 import Cocoa
 
 protocol DragEndpoint {
+    weak var parent: PanelViewController? { get set }
     var dragState: State { get set }
     func dragFinished()
 }
@@ -18,7 +19,7 @@ protocol DragSource: DragEndpoint {
 }
 
 protocol DragTerminal: DragEndpoint {
-    
+
 }
 
 
@@ -28,11 +29,11 @@ enum State {
     case target
 }
 
-enum AbutmentTopology {
+public enum AbutmentTopology {
     case interior, exterior
 }
 
-enum PanelAbutment {
+public enum PanelAbutment {
     case none
     case top(AbutmentTopology)
     case right(AbutmentTopology)
@@ -41,6 +42,8 @@ enum PanelAbutment {
 }
 
 class DockingOperationGlyph: NSView, DragSource {
+    
+    weak var parent: PanelViewController?
     
     var menuAction: () -> Void = { }
     
@@ -113,11 +116,14 @@ class DockingOperationGlyph: NSView, DragSource {
     //    private let shapeLayer = CAShapeLayer()
     
     private func setAppearanceForState() {
-       
+        
     }
 }
 
 class DragHandler: NSView, DragTerminal {
+    
+    weak var parent: PanelViewController?
+    weak var container: PanelSplitContainerController?
     
     var dragState: State = State.idle { didSet { needsLayout = true } }
     
@@ -128,7 +134,7 @@ class DragHandler: NSView, DragTerminal {
     }
     
     public override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        print("entered \(sender.draggingSource())")
+//        print("entered \(sender.draggingSource())")
         guard case .idle = dragState else { return [] }
         guard (sender.draggingSource() as? ConnectionDragController)?.sourceEndpoint != nil else { return [] }
         dragState = .target
@@ -137,7 +143,7 @@ class DragHandler: NSView, DragTerminal {
     
     public override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
         let point = self.convert(sender.draggingLocation(), from: nil)
-        print("\(self), \(point)")
+//        print("\(self), \(point)")
         updateDragAction(point)
         return super.draggingUpdated(sender)
     }
@@ -160,6 +166,12 @@ class DragHandler: NSView, DragTerminal {
         let abutment = getSelectedAbutment(at: point)
         controller.connect(to: self, at: abutment)
         return true
+    }
+    
+    convenience init(frame: NSRect = .zero, container: PanelSplitContainerController) {
+        self.init(frame: frame)
+        self.container = container
+        
     }
     
     override init(frame: NSRect) {

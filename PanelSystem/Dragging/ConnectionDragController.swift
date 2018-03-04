@@ -14,6 +14,10 @@ class ConnectionDragController: NSObject, NSDraggingSource {
     
     func connect(to target: DragTerminal, at abutment: PanelAbutment) {
         Swift.print("Connect \(sourceEndpoint!) to \(target) at \(abutment)")
+        if let source = sourceEndpoint?.parent, let destinaton = target.parent {
+            source.dockRelative(to: destinaton, at: abutment)
+        }
+        
     }
     
     func trackDrag(forMouseDownEvent mouseDownEvent: NSEvent, in sourceEndpoint: DragEndpoint) {

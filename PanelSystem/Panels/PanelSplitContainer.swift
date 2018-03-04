@@ -53,9 +53,9 @@ public class PanelSplitContainerController: NSSplitViewController {
     
     private func setupUI() {
         
-        self.splitView.isVertical = orientation == .horizontal
+        self.splitView.isVertical = orientation == .vertical
         splitView.dividerStyle = .thin
-        view.wantsLayer = true
+//        view.wantsLayer = true
         
     }
     
@@ -74,6 +74,7 @@ public class PanelSplitContainerController: NSSplitViewController {
             
             if let pvc = vc as? PanelViewController {
                 pvc.toolbarController.delegate = self
+                pvc.parentContainer = self 
             }
             
             let item = NSSplitViewItem(viewController: vc)
@@ -83,22 +84,67 @@ public class PanelSplitContainerController: NSSplitViewController {
         
     }
     
+    func insert(_ item: NSSplitViewItem, at index: Int) {
+        
+        print("ADDITION: -")
+        
+        if let vc = item.viewController as? PanelViewController {
+            vc.toolbarController.delegate = self
+            vc.parentContainer = self 
+        }
+        
+        if let items = _splitViewItems, index <= items.count  || index == 0 {
+            _splitViewItems?.insert(item, at: index)
+        } else {
+            _splitViewItems?.append(item)
+        }
+        var glyphs = self.splitViewItems.map({ _ in "🅰️" }).reduce("",{ $0 + $1 })
+        print("Before: \(glyphs)")
+
+        
+        setupLayout()
+        glyphs = self.splitViewItems.map({ _ in "🅱️" }).reduce("",{ $0 + $1 })
+        print("After: \(glyphs)")
+    }
+    
 }
+
 
 extension PanelSplitContainerController: PanelToolbarControllerDelegate {
     
-    func pop(_ panel: NSViewController) {
-        guard let index = splitViewItems.index(where: { $0.viewController == panel } ) else { return }
-        splitViewItems.remove(at: index)
+    @discardableResult func pop(_ panel: NSViewController) -> NSSplitViewItem? {
+        print("Items Count: \(self.splitViewItems.count)")
+        guard let index = splitViewItems.index(where: { $0.viewController == panel } ) else { return nil }
+        
+        print("REMOVAL: -")
+        
+        var glyphs = self.splitViewItems.map({ _ in "🅰️" }).reduce("",{ $0 + $1 })
+        print("Before: \(glyphs)")
+        
+        
+        let element = _splitViewItems?.remove(at: index)
+        setupLayout()
+        
+        glyphs = self.splitViewItems.map({ _ in "🅱️" }).reduce("",{ $0 + $1 })
+        print("After: \(glyphs)")
+        
+        if splitViewItems.count == 0, let p = parent as? PanelSplitContainerController {
+        
+             guard let index = p.splitViewItems.index(where: { $0.viewController == self } ) else { return nil }
+            p.splitViewItems.remove(at: index)
+            
+        }
+        
+        return element
     }
     
     func undock(_ panel: NSViewController) {
         
         let frame = panel.view.screenFrame ?? defaultFrame
         
-        pop(panel)
-        
-        let _ = panelController(with: [panel], at: frame)
+        if let p = pop(panel), let vc = p.viewController as? PanelViewController {
+            let _ = panelController(with: [vc], at: frame)
+        }
         
     }
     
@@ -106,9 +152,9 @@ extension PanelSplitContainerController: PanelToolbarControllerDelegate {
         
         let frame = panel.view.screenFrame ?? defaultFrame
         let window = panel.view.window
-        pop(panel)
-        
-        let _ = panelController(with: [panel], at: frame, parent: window)
+        if let p = pop(panel), let vc = p.viewController as? PanelViewController {
+            let _ = panelController(with: [vc], at: frame, parent: window)
+        }
         
     }
     
