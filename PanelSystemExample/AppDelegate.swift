@@ -11,18 +11,16 @@ import PanelSystem
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-    
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
         if let controller = PanelSystem.panelWindowController, let window = controller.window {
             window.makeKeyAndOrderFront(nil)
         }
     }
-    
+
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
-    
-    
-}
 
+}

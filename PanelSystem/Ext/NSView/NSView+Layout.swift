@@ -15,7 +15,6 @@ extension NSView {
         let leadingAnchor = self.leadingAnchor.constraint(equalTo: superview.leadingAnchor)
         let topAnchor = self.topAnchor.constraint(equalTo: superview.topAnchor)
         let bottomAnchor = self.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
-        
         NSLayoutConstraint.activate([trailingAnchor, leadingAnchor, topAnchor, bottomAnchor])
     }
 }

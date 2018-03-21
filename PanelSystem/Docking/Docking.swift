@@ -14,5 +14,3 @@ import AppKit
     @objc func closePanel()
     @objc func dockingMenu() -> NSMenu
 }
-
-
