@@ -21,7 +21,7 @@ internal let defaultFrame = NSRect(origin: .zero, size: defaultWindowSize)
 
 public var panelControllers: [PanelController] = []
 
-private func basicWindow(with frame: NSRect? = nil, centered: Bool = false) -> NSWindow {
+public func basicWindow(with frame: NSRect? = nil, centered: Bool = false) -> NSWindow {
 
     let frame = frame ?? defaultFrame
     let window = NSWindow(contentRect: frame,

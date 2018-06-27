@@ -18,7 +18,7 @@ struct BorderViews {
     }
 }
 
-public class PanelViewController: NSViewController {
+open class PanelViewController: NSViewController {
 
     weak var parentContainer: PanelSplitContainerController?
     var toolbarController = PanelToolbarController(backgroundColor: .darkGray)
@@ -33,8 +33,14 @@ public class PanelViewController: NSViewController {
         borders.forEach { $0.isHidden = true }
         return BorderViews(top: borders[0], right: borders[2], bottom: borders[3], left: borders[1])
     }()
+    
+    lazy open var panelConstraints: [NSLayoutConstraint] = {
+        return [
+            self.view.widthAnchor.constraint(greaterThanOrEqualToConstant: 500)
+        ]
+    }()
 
-    init() {
+    public init() {
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -42,7 +48,7 @@ public class PanelViewController: NSViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func loadView() {
+    override open func loadView() {
         let dragHandler = DragHandler()
         dragHandler.parent = self
         dragHandler.container = parentContainer
@@ -54,7 +60,7 @@ public class PanelViewController: NSViewController {
         self.view = dragHandler
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupLayout()
@@ -103,12 +109,12 @@ public class PanelViewController: NSViewController {
 
     }
 
-    public override func viewWillLayout() {
+    open override func viewWillLayout() {
         super.viewWillLayout()
         toolbarController.view.layout()
     }
 
-    public override func viewDidLayout() {
+    open override func viewDidLayout() {
         super.viewDidLayout()
 
         self.view.removeTrackingArea(trackingArea)
@@ -116,7 +122,7 @@ public class PanelViewController: NSViewController {
         setupTracking()
     }
 
-    public override func mouseExited(with event: NSEvent) {
+    open override func mouseExited(with event: NSEvent) {
         borderViews.all.forEach { view in view.isHidden = true }
     }
 
@@ -275,7 +281,7 @@ class ViewController: NSViewController {
     private let backgroundColor: NSColor
 
     init(backgroundColor: NSColor) {
-        self.backgroundColor = .random()
+        self.backgroundColor = NSColor(white: 0.141176, alpha: 1.0)
         super.init(nibName: nil, bundle: nil)
 
     }

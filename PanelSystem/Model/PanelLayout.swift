@@ -8,28 +8,52 @@
 
 import Foundation
 
-protocol DockableModel {}
+public protocol DockableModel {
+    
+    var name: String { get set }
+    var panel: Panel { get }
+}
 
-enum PanelOrientation {
+public protocol ControllerContainer {
+    var controller: PanelViewController { get }
+}
+
+public protocol DockingControllerModel: DockableModel, ControllerContainer {
+    associatedtype ControllerType: PanelViewController
+}
+
+public enum PanelOrientation {
     case horizontal
     case vertical
 }
 
-struct PanelViewModel: DockableModel {
-    var name: String
-    var panel: Panel {
+public struct PanelViewModel: DockingControllerModel {
+    
+    public typealias ControllerType = PanelViewController
+    
+    public var name: String
+    public var panel: Panel {
         return .view(self)
+    }
+    
+    public var controller: PanelViewController {
+        return PanelViewController()
+    }
+    
+    public init(name: String) {
+        self.name = name
     }
 }
 
-enum Panel {
+public enum Panel {
+    
     case layouts([Panel], PanelOrientation)
-    case view(PanelViewModel)
+    case view(DockableModel)
 }
 
-extension Panel {
+public extension Panel {
     func window() {}
-    func controller() -> NSViewController {
+    public func controller() -> NSViewController {
         switch self {
         case .layouts(let panels, let orientation):
             let container = PanelSplitContainerController()
@@ -41,8 +65,9 @@ extension Panel {
                 return c
             }, orientation: orientation)
             return container
-        case .view:
-            return PanelViewController()
+        case .view(let model):
+            guard let m = model as? ControllerContainer else { return PanelViewController() }
+            return m.controller
         }
     }
 }

@@ -66,13 +66,13 @@ public class PanelSplitContainerController: NSSplitViewController {
     }
 
     func setup(with controllers: [NSViewController], orientation: PanelOrientation) {
-
+        
         self.orientation = orientation
         self.splitItems = controllers.map { viewController in
 
-            viewController.view.widthAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
 
             if let pvc = viewController as? PanelViewController {
+                NSLayoutConstraint.activate(pvc.panelConstraints)
                 pvc.toolbarController.delegate = self
                 pvc.parentContainer = self
             }

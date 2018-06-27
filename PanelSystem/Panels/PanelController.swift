@@ -61,7 +61,7 @@ public class PanelController: NSWindowController, NSWindowDelegate {
         }
     }
 
-    func setup(with controllers: [NSViewController]) {
+    public func setup(with controllers: [NSViewController]) {
         container.setup(with: controllers, orientation: orientation)
     }
 

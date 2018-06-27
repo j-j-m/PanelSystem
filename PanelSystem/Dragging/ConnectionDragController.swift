@@ -25,6 +25,7 @@ class ConnectionDragController: NSObject, NSDraggingSource {
         guard let pbItem = NSPasteboardItem(pasteboardPropertyList: "\(view)", ofType: .string),
         let endpointView = sourceEndpoint as? NSView else { return }
         let item = NSDraggingItem(pasteboardWriter: pbItem)
+        item.draggingFrame.size = CGSize(width: 100, height: 100)
         let session = endpointView.beginDraggingSession(with: [item], event: mouseDownEvent, source: self)
         session.animatesToStartingPositionsOnCancelOrFail = false
     }
