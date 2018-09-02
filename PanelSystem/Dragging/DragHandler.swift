@@ -117,13 +117,13 @@ class DragHandler: NSView, DragTerminal {
     public override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
 //        print("entered \(sender.draggingSource())")
         guard case .idle = dragState else { return [] }
-        guard (sender.draggingSource() as? ConnectionDragController)?.sourceEndpoint != nil else { return [] }
+        guard (sender.draggingSource as? ConnectionDragController)?.sourceEndpoint != nil else { return [] }
         dragState = .target
-        return sender.draggingSourceOperationMask()
+        return sender.draggingSourceOperationMask
     }
 
     public override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-        let point = self.convert(sender.draggingLocation(), from: nil)
+        let point = self.convert(sender.draggingLocation, from: nil)
 //        print("\(self), \(point)")
         updateDragAction(point)
         return super.draggingUpdated(sender)
@@ -142,8 +142,8 @@ class DragHandler: NSView, DragTerminal {
     }
 
     public override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        guard let controller = sender.draggingSource() as? ConnectionDragController else { return false }
-        let point = self.convert(sender.draggingLocation(), from: nil)
+        guard let controller = sender.draggingSource as? ConnectionDragController else { return false }
+        let point = self.convert(sender.draggingLocation, from: nil)
         let abutment = getSelectedAbutment(at: point)
         controller.connect(to: self, at: abutment)
         return true

@@ -10,7 +10,7 @@ import AppKit
 
 fileprivate extension NSTouchBar.CustomizationIdentifier {
 
-    static let touchBar = NSTouchBar.CustomizationIdentifier("JJM.PanelSystem")
+    static let touchBar = "JJM.PanelSystem"
 }
 
 fileprivate extension NSTouchBarItem.Identifier {

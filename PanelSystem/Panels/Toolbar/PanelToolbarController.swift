@@ -10,7 +10,7 @@ import AppKit
 
 extension NSImage {
     static func named(_ resourceName: String) -> NSImage? {
-        let name = NSImage.Name(resourceName)
+        let name = resourceName
         guard let bundle = Bundle(identifier: "JJM.PanelSystem") else { return nil }
         return bundle.image(forResource: name)
     }

@@ -22,7 +22,7 @@ class ConnectionDragController: NSObject, NSDraggingSource {
     func trackDrag(forMouseDownEvent mouseDownEvent: NSEvent, in sourceEndpoint: DragEndpoint) {
         self.sourceEndpoint = sourceEndpoint
 
-        guard let pbItem = NSPasteboardItem(pasteboardPropertyList: "\(view)", ofType: .string),
+        guard let pbItem = NSPasteboardItem(pasteboardPropertyList: "view", ofType: .string),
         let endpointView = sourceEndpoint as? NSView else { return }
         let item = NSDraggingItem(pasteboardWriter: pbItem)
         item.draggingFrame.size = CGSize(width: 100, height: 100)

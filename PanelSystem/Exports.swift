@@ -28,7 +28,7 @@ public func basicWindow(with frame: NSRect? = nil, centered: Bool = false) -> NS
                           styleMask: [.closable, .titled, .borderless, .resizable],
                           backing: .buffered,
                           defer: false)
-    window.toolbar = NSToolbar(identifier: NSToolbar.Identifier("maintoolbar"))
+    window.toolbar = NSToolbar(identifier: "maintoolbar")
     window.setFrame(frame, display: true)
     window.appearance = NSAppearance(named: .vibrantDark)
 
