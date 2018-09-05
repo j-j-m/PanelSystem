@@ -9,7 +9,7 @@
 import Cocoa
 
 protocol DragEndpoint {
-    weak var parent: PanelViewController? { get set }
+    var parent: PanelViewController? { get set }
     var dragState: State { get set }
     func dragFinished()
 }
